@@ -3,7 +3,6 @@
     [staplo.operations :as operations]))
 
 (defn generate-string [length chars]
-  (print chars)
   (reduce
     #(str % (rand-nth chars))
     ""

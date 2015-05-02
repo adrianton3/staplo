@@ -13,6 +13,7 @@
 
 (def target (atom nil))
 
+(def current-level (atom 0))
 
 
 (defn push-state! [text]
@@ -39,14 +40,28 @@
     (html/set-text! "target" new-state)))
 
 (defn clicked-on [text]
-  (let [new-string ((get operations/operations text) (get-current))]
-    (push-state! new-string)
-    (check-win)))
+  (if-not (win-condition?)
+    (let [new-string ((get operations/operations text) (get-current))]
+      (push-state! new-string)
+      (check-win))))
+
+(defn win-condition? []
+  (= (get-current) @target))
 
 (defn check-win []
   (if
-    (= (get-current) @target)
-    (print "victory")))
+    (win-condition?)
+    (win)))
+
+(defn win []
+  (html/remove-class! "current" "neutral")
+  (html/add-class! "current" "correct")
+  (js/setTimeout
+    (fn []
+      (html/remove-class! "current" "correct")
+      (html/add-class! "current" "neutral")
+      (next-level (nth levels/level-configs @current-level)))
+    2500))
 
 (html/on-click "undo" pop-state!)
 
@@ -60,4 +75,4 @@
 
 (html/update-list! "list" (:operations (nth levels/level-configs 0)) clicked-on)
 
-(next-level (nth levels/level-configs 0))
+(next-level (nth levels/level-configs @current-level))

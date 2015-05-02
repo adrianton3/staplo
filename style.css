@@ -39,6 +39,7 @@ li:hover {
 
 .correct {
     color: #74e02b;
+    transition: 500ms;
 }
 
 #game {
