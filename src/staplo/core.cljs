@@ -65,14 +65,18 @@
 
 (html/on-click "undo" pop-state!)
 
-
 (defn next-level [config]
   (let [challenge (generator/generate-challenge config)]
     (set-start! (:start challenge))
     (reset! target (:target challenge))))
 
+(defn query []
+  (js/parseInt (subs (.-search js/location) 3) 10))
 
+; =============================================================================
 
-(html/update-list! "list" (:operations (nth levels/level-configs 0)) clicked-on)
+(reset! current-level (query))
+
+(html/update-list! "list" (:operations (nth levels/level-configs @current-level)) clicked-on)
 
 (next-level (nth levels/level-configs @current-level))

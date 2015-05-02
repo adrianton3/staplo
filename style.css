@@ -1,7 +1,30 @@
 body {
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-size: 56px;
     color: #2A2A2A;
+    font-weight: 300;
+}
+
+h1 {
+    font-weight: 100;
+    text-align: center;
+}
+
+a {
+    text-decoration: none;
+    color: #2A2A2A;
+}
+
+.level {
+    padding: 2px 16px 4px 16px;
+    border: 1px solid #2A2A2A;
+    transition: 120ms;
+}
+
+.level:hover {
+    background-color: #ff1c4d;
+    color: #FFF;
+    transition: 120ms;
 }
 
 ul {
@@ -12,7 +35,7 @@ ul {
 }
 
 li {
-    border: 2px solid #ff1c4d;
+    border: 1px solid #2A2A2A;
     font-size: 32px;
     display: block;
     margin: 6px 0;
@@ -25,6 +48,12 @@ li {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+}
+
+.level-select {
+    margin-top: 128px;
+    text-align: center;
+    font-size: 32px;
 }
 
 li:hover {
@@ -40,6 +69,10 @@ li:hover {
 .correct {
     color: #74e02b;
     transition: 500ms;
+}
+
+#current, #target {
+    font-family: 'Bitter', serif;
 }
 
 #game {
