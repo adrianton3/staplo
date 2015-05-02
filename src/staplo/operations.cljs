@@ -4,14 +4,16 @@
 
 (def operations {
   "reverse" str/reverse
-  "pop" (fn [string] (subs string 0 (- (count string) 1)))
-  "duplicate" (fn [string] (str string string))
-  "rotate" (fn [string] (str
-                          (last string)
-                          (subs string 0 (dec (count string)))))
-  "push-a" (fn [string] (str string "a"))
-  "push-b" (fn [string] (str string "b"))})
-
-
-;"unwrap"
-;"duplicate-last"
+  "rotate" #(str
+              (last %)
+              (subs % 0 (dec (count %))))
+  "pop" #(subs % 0 (dec (count %)))
+  "unwrap" #(if (= (first %) (last %)) (subs % 1 (dec (count %))) %)
+  "duplicate" #(str % %)
+  "duplicate-last" #(str % (last %))
+  "push-a" #(str % "a")
+  "push-b" #(str % "b")
+  "push-c" #(str % "c")
+  "ab -> c" #(str/replace % #"ab" "c")
+  "bc -> a" #(str/replace % #"bc" "a")
+  "ca -> b" #(str/replace % #"ca" "b")})
