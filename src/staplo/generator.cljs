@@ -3,7 +3,7 @@
     [staplo.operations :as operations]))
 
 (defn rand2 [start end]
-  (+ start (rand-int (- end start))))
+  (+ start (rand-int (inc (- end start)))))
 
 (defn rand-interval [{:keys [start end]}]
   (rand2 start end))
@@ -15,25 +15,34 @@
     base
     (range 0 times)))
 
-(defn generate-string [length chars]
-  (accumulate
-    #(str % (rand-nth chars))
-    ""
-    length))
+
+(defn generate-string [interval]
+  (let [char-set ["a" "b" "c"]
+        length (rand-interval interval)]
+    (accumulate
+      #(str % (rand-nth chars))
+      ""
+      length)))
+
+(def generate-number rand-interval)
+
+(defn generate-start [type length]
+  ((if (= type "strings")
+     generate-string
+     generate-number) length))
+
 
 (defn generate-ops [start-text steps operations]
   (letfn [
     (step [text]
-      (let [op-name (rand-nth operations)
-            op (get operations/operations op-name)]
+      (let [op-type (:type operations)
+            op-name (rand-nth (:list operations))
+            op (get (get operations/operations op-type) op-name)]
         (op text)))]
     (accumulate step start-text steps)))
 
 (defn generate-challenge [config]
-  (let [char-sets [["a" "b"] ["a" "b" "c"]]
-        char-set (rand-nth char-sets)
-        start-length (rand-interval (:start-length config))
-        start (generate-string start-length char-set)
+  (let [start (generate-start (:type (:operations config)) (:start-length config))
         steps (rand-interval (:steps config))
         target (generate-ops start steps (:operations config))]
     {:start start

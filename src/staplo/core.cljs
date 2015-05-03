@@ -13,7 +13,7 @@
 
 (def target (atom nil))
 
-(def current-level (atom 0))
+(def current-level (atom {:type "" :level ""}))
 
 
 (defn push-state! [text]
@@ -41,7 +41,7 @@
 
 (defn clicked-on [text]
   (if-not (win-condition?)
-    (let [new-string ((get operations/operations text) (get-current))]
+    (let [new-string ((get (get operations/operations (:type @current-level)) text) (get-current))]
       (push-state! new-string)
       (check-win))))
 
@@ -60,23 +60,31 @@
     (fn []
       (html/remove-class! "current" "correct")
       (html/add-class! "current" "neutral")
-      (next-level (nth levels/level-configs @current-level)))
+      (next-level))
     2500))
 
 (html/on-click "undo" pop-state!)
 
-(defn next-level [config]
-  (let [challenge (generator/generate-challenge config)]
+(defn next-level []
+  (let [{:keys [type level]} @current-level
+         config (nth (get levels/level-configs type) level)
+         challenge (generator/generate-challenge config)]
     (set-start! (:start challenge))
     (reset! target (:target challenge))))
 
 (defn query []
-  (js/parseInt (subs (.-search js/location) 3) 10))
+  (let [query (.param (js/purl))]
+    {:type (.-type query)
+     :level (js/parseInt (.-level query) 10)}))
 
 ; =============================================================================
 
 (reset! current-level (query))
 
-(html/update-list! "list" (:operations (nth levels/level-configs @current-level)) clicked-on)
+(html/update-list!
+  "list"
+  (let [{:keys [type level]} @current-level]
+    (:list (:operations (nth (get levels/level-configs type) level))))
+  clicked-on)
 
-(next-level (nth levels/level-configs @current-level))
+(next-level)
