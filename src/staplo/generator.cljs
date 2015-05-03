@@ -20,7 +20,7 @@
   (let [char-set ["a" "b" "c"]
         length (rand-interval interval)]
     (accumulate
-      #(str % (rand-nth chars))
+      #(str % (rand-nth char-set))
       ""
       length)))
 
