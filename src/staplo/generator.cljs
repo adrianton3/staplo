@@ -29,9 +29,6 @@
             ""
             length))]
     (loop [candidate (generate-candidate)]
-      (print length)
-      (print candidate)
-      (print (same-char? candidate))
       (if (same-char? candidate)
         (recur (generate-candidate))
         candidate))))
@@ -46,16 +43,20 @@
 
 (defn generate-ops [start-text steps operations]
   (letfn [
-    (step [text]
-      (let [op-type (:type operations)
+    (step [{text :text history :history}]
+      (let [op-sort (:type operations)
             op-name (rand-nth (:list operations))
-            op (get (get operations/operations op-type) op-name)]
-        (op text)))]
-    (accumulate step start-text steps)))
+            {op :operation} ((operations/operations op-sort) op-name)]
+        {:text (op text)
+         :history (conj history op-name)}))]
+    (accumulate
+      step
+      {:text start-text :history '()}
+      steps)))
 
 (defn generate-challenge [config]
   (let [start (generate-start (:type (:operations config)) (:start-length config))
         steps (rand-interval (:steps config))
-        target (generate-ops start steps (:operations config))]
+        target ((generate-ops start steps (:operations config)) :text)]
     {:start start
      :target target}))
