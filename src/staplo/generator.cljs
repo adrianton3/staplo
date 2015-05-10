@@ -1,5 +1,6 @@
 (ns staplo.generator
   (:require
+    [clojure.string :as str]
     [staplo.operations :as operations]))
 
 (defn rand2 [start end]
@@ -15,14 +16,25 @@
     base
     (range 0 times)))
 
+(defn same-char? [string]
+  (apply = (str/split string "")))
 
 (defn generate-string [interval]
   (let [char-set ["a" "b" "c"]
-        length (rand-interval interval)]
-    (accumulate
-      #(str % (rand-nth char-set))
-      ""
-      length)))
+        length (rand-interval interval)
+        generate-candidate
+          (fn []
+            (accumulate
+            #(str % (rand-nth char-set))
+            ""
+            length))]
+    (loop [candidate (generate-candidate)]
+      (print length)
+      (print candidate)
+      (print (same-char? candidate))
+      (if (same-char? candidate)
+        (recur (generate-candidate))
+        candidate))))
 
 (def generate-number rand-interval)
 
