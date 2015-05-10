@@ -40,14 +40,27 @@
      generate-string
      generate-number) length))
 
+; too many parameters
+(defn generate-op [operations operation-names text history]
+  (let [rand-op
+        #(let [op-name (rand-nth operation-names)]
+            {:op-name op-name
+             :op (operations op-name)})]
+    (loop [candidate-op (rand-op)]
+      (if ((:precondition (:op candidate-op)) text history)
+        candidate-op
+        (recur (rand-op))))))
 
-(defn generate-ops [start-text steps operations]
+(defn generate-ops [start-text steps operations-config]
   (letfn [
     (step [{text :text history :history}]
-      (let [op-sort (:type operations)
-            op-name (rand-nth (:list operations))
-            {op :operation} ((operations/operations op-sort) op-name)]
-        {:text (op text)
+      (let [op-sort (:type operations-config)
+            {op-name :op-name op :op} (generate-op
+                                        (operations/operations op-sort)
+                                        (:list operations-config)
+                                        text
+                                        history)]
+        {:text ((:operation op) text)
          :history (conj history op-name)}))]
     (accumulate
       step

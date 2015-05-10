@@ -5,8 +5,6 @@
 (defn wrap-endec [fun]
   #(js/parseInt (fun (.toString %)) 10))
 
-(def reverse str/reverse)
-
 (defn rotate [string]
   (str
     (last string)
@@ -24,8 +22,8 @@
 (def operations {
   "strings" {
               "reverse" (operation-pair
-                          reverse
-                          #(not= % (reverse %)))
+                          str/reverse
+                          #(and (not= % (str/reverse %)) (or (empty? %2) (not= (first %2) "reverse"))))
               "rotate" (operation-pair
                          rotate
                          #(not (same-char? %)))
@@ -67,6 +65,6 @@
     "*5" #(* 5 %)
     "*11" #(* 11 %)
     "sqr" #(* % %)
-    "reverse" (wrap-endec reverse)
+    "reverse" (wrap-endec str/reverse)
     "rotate" (wrap-endec rotate)
   }})
