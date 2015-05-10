@@ -38,16 +38,16 @@
                             #(< (count %) 4))
               "duplicate-last" (operation-pair
                                  #(str % (last %))
-                                 #(< (count %) 5))
+                                 #(< (count %) 6))
               "push-a" (operation-pair
                          #(str % "a")
-                         #(< (count %) 5))
+                         #(< (count %) 6))
               "push-b" (operation-pair
                          #(str % "b")
-                         #(< (count %) 5))
+                         #(< (count %) 6))
               "push-c" (operation-pair
                          #(str % "c")
-                         #(< (count %) 5))
+                         #(< (count %) 6))
               "ab -> c" (operation-pair
                           #(replace % #"ab" "c")
                           #(contains-str % "ab"))

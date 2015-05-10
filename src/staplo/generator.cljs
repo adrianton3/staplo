@@ -41,7 +41,7 @@
      generate-number) length))
 
 ; way too many parameters
-(defn generate-op [operations operation-names start-text text history]
+(defn generate-op [operations operation-names text op-history text-history]
   (let [rand-op
         #(let [op-name (rand-nth operation-names)]
             {:op-name op-name
@@ -49,25 +49,29 @@
     (loop [candidate-op (rand-op)]
       (let [{{precondition :precondition operation :operation} :op} candidate-op
             result (operation text)]
-        (if (and (precondition text history) (not= start-text result))
+        (if (and
+              (precondition text op-history)
+              (not (contains? text-history result)))
           candidate-op
           (recur (rand-op)))))))
 
 (defn generate-ops [start-text steps operations-config]
   (letfn [
-    (step [{text :text history :history}]
+    (step [{text :text op-history :op-history text-history :text-history}]
       (let [op-sort (:type operations-config)
             {op-name :op-name op :op} (generate-op
                                         (operations/operations op-sort)
                                         (:list operations-config)
-                                        start-text
                                         text
-                                        history)]
-        {:text ((:operation op) text)
-         :history (conj history op-name)}))]
+                                        op-history
+                                        text-history)
+            result ((:operation op) text)]
+        {:text result
+         :op-history (conj op-history op-name)
+         :text-history (conj text-history result)}))]
     (accumulate
       step
-      {:text start-text :history '()}
+      {:text start-text :op-history '() :text-history #{start-text}}
       steps)))
 
 (defn generate-challenge [config]
