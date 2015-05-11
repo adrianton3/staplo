@@ -59,12 +59,28 @@
                           #(contains-str % "ca"))
               }
   "numbers" {
-    "+7" #(+ 7 %)
-    "+9" #(+ 9 %)
-    "*2" #(* 2 %)
-    "*5" #(* 5 %)
-    "*11" #(* 11 %)
-    "sqr" #(* % %)
-    "reverse" (wrap-endec str/reverse)
-    "rotate" (wrap-endec rotate)
-  }})
+              "+7" (operation-pair
+                     #(+ 7 %)
+                     (constantly true))
+              "+9" (operation-pair
+                     #(+ 9 %)
+                     (constantly true))
+              "*2" (operation-pair
+                     #(* 2 %)
+                     #(not= 0 %))
+              "*5" (operation-pair
+                     #(* 5 %)
+                     #(not= 0 %))
+              "*11" (operation-pair
+                      #(* 11 %)
+                      #(not= 0 %))
+              "sqr" (operation-pair
+                      #(* % %)
+                      #(<= % 20))
+              "reverse" (operation-pair
+                          (wrap-endec str/reverse)
+                          #(let [string (.toString %)] (not= (str (str/reverse string)))))
+              "rotate" (operation-pair
+                         (wrap-endec rotate)
+                         #(let [string (.toString %)] (not (same-char? string))))
+              }})
