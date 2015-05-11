@@ -26,53 +26,53 @@ staplo.html.update_list_BANG_ = (function update_list_BANG_(id,elements,handler)
 var list = document.getElementById(id);
 list.innerHTML = "";
 
-var seq__11495 = cljs.core.seq.call(null,elements);
-var chunk__11496 = null;
-var count__11497 = (0);
-var i__11498 = (0);
+var seq__20135 = cljs.core.seq.call(null,elements);
+var chunk__20136 = null;
+var count__20137 = (0);
+var i__20138 = (0);
 while(true){
-if((i__11498 < count__11497)){
-var element = cljs.core._nth.call(null,chunk__11496,i__11498);
-var item_11499 = staplo.html.create_list_item.call(null,element,handler);
-list.appendChild(item_11499);
+if((i__20138 < count__20137)){
+var element = cljs.core._nth.call(null,chunk__20136,i__20138);
+var item_20139 = staplo.html.create_list_item.call(null,element,handler);
+list.appendChild(item_20139);
 
-var G__11500 = seq__11495;
-var G__11501 = chunk__11496;
-var G__11502 = count__11497;
-var G__11503 = (i__11498 + (1));
-seq__11495 = G__11500;
-chunk__11496 = G__11501;
-count__11497 = G__11502;
-i__11498 = G__11503;
+var G__20140 = seq__20135;
+var G__20141 = chunk__20136;
+var G__20142 = count__20137;
+var G__20143 = (i__20138 + (1));
+seq__20135 = G__20140;
+chunk__20136 = G__20141;
+count__20137 = G__20142;
+i__20138 = G__20143;
 continue;
 } else {
-var temp__4126__auto__ = cljs.core.seq.call(null,seq__11495);
+var temp__4126__auto__ = cljs.core.seq.call(null,seq__20135);
 if(temp__4126__auto__){
-var seq__11495__$1 = temp__4126__auto__;
-if(cljs.core.chunked_seq_QMARK_.call(null,seq__11495__$1)){
-var c__4559__auto__ = cljs.core.chunk_first.call(null,seq__11495__$1);
-var G__11504 = cljs.core.chunk_rest.call(null,seq__11495__$1);
-var G__11505 = c__4559__auto__;
-var G__11506 = cljs.core.count.call(null,c__4559__auto__);
-var G__11507 = (0);
-seq__11495 = G__11504;
-chunk__11496 = G__11505;
-count__11497 = G__11506;
-i__11498 = G__11507;
+var seq__20135__$1 = temp__4126__auto__;
+if(cljs.core.chunked_seq_QMARK_.call(null,seq__20135__$1)){
+var c__4559__auto__ = cljs.core.chunk_first.call(null,seq__20135__$1);
+var G__20144 = cljs.core.chunk_rest.call(null,seq__20135__$1);
+var G__20145 = c__4559__auto__;
+var G__20146 = cljs.core.count.call(null,c__4559__auto__);
+var G__20147 = (0);
+seq__20135 = G__20144;
+chunk__20136 = G__20145;
+count__20137 = G__20146;
+i__20138 = G__20147;
 continue;
 } else {
-var element = cljs.core.first.call(null,seq__11495__$1);
-var item_11508 = staplo.html.create_list_item.call(null,element,handler);
-list.appendChild(item_11508);
+var element = cljs.core.first.call(null,seq__20135__$1);
+var item_20148 = staplo.html.create_list_item.call(null,element,handler);
+list.appendChild(item_20148);
 
-var G__11509 = cljs.core.next.call(null,seq__11495__$1);
-var G__11510 = null;
-var G__11511 = (0);
-var G__11512 = (0);
-seq__11495 = G__11509;
-chunk__11496 = G__11510;
-count__11497 = G__11511;
-i__11498 = G__11512;
+var G__20149 = cljs.core.next.call(null,seq__20135__$1);
+var G__20150 = null;
+var G__20151 = (0);
+var G__20152 = (0);
+seq__20135 = G__20149;
+chunk__20136 = G__20150;
+count__20137 = G__20151;
+i__20138 = G__20152;
 continue;
 }
 } else {

@@ -39,9 +39,10 @@
   (fn [key atom old-state new-state]
     (html/set-text! "target" new-state)))
 
-(defn clicked-on [text]
+(defn clicked-on [op-name]
   (if-not (win-condition?)
-    (let [new-string ((get (get operations/operations (:type @current-level)) text) (get-current))]
+    (let [{op :operation} ((operations/operations (:type @current-level)) op-name)
+           new-string (op  (get-current))]
       (push-state! new-string)
       (check-win))))
 
