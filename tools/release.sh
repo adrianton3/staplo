@@ -7,5 +7,5 @@ cp tmp/out ./ -r
 
 git checkout master -- index.html
 git checkout master -- game.html
-git checkout master -- style.html
+git checkout master -- style.css
 git checkout master -- lib
