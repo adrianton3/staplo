@@ -1,20 +1,8 @@
 (ns staplo.generator
   (:require
     [clojure.string :as str]
-    [staplo.operations :as operations]))
-
-(defn rand2 [start end]
-  (+ start (rand-int (inc (- end start)))))
-
-(defn rand-interval [{:keys [start end]}]
-  (rand2 start end))
-
-; clojure probably has this already
-(defn accumulate [fun base times]
-  (reduce
-    #(fun %)
-    base
-    (range 0 times)))
+    [staplo.operations :as operations]
+    [staplo.common :refer [rand2 rand-interval accumulate]]))
 
 (defn same-char? [string]
   (apply = (str/split string "")))
@@ -35,10 +23,20 @@
 
 (def generate-number rand-interval)
 
+(defn generate-stack [interval]
+  (accumulate
+    #(conj % (rand2 3 9))
+    '()
+    (rand-interval interval)))
+
+(def generators {
+  "strings" generate-string
+  "numbers" generate-number
+  "stack" generate-stack
+  })
+
 (defn generate-start [type length]
-  ((if (= type "strings")
-     generate-string
-     generate-number) length))
+  ((generators type) length))
 
 ; way too many parameters
 (defn generate-op [operations operation-names text op-history text-history]

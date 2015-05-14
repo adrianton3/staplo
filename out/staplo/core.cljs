@@ -20,7 +20,7 @@
   (swap! state conj text))
 
 (defn pop-state! []
-  (if-not (empty? (pop @state))
+  (when-not (empty? (pop @state))
     (swap! state pop)))
 
 (defn can-pop-state? []
@@ -31,16 +31,21 @@
 
 (defn get-current [] (first @state))
 
+(defn update-display! [id value]
+  (if (= (:type @current-level) "stack")
+    (html/update-list! id value)
+    (html/set-text! id value)))
+
 (add-watch state :watcher
   (fn [key atom old-state new-state]
-    (html/set-text! "current" (get-current))))
+    (update-display! "current" (get-current))))
 
 (add-watch target :watcher
   (fn [key atom old-state new-state]
-    (html/set-text! "target" new-state)))
+    (update-display! "target" new-state)))
 
 (defn clicked-on [op-name]
-  (if-not (win-condition?)
+  (when-not (win-condition?)
     (let [{op :operation} ((operations/operations (:type @current-level)) op-name)
            new-string (op  (get-current))]
       (push-state! new-string)
@@ -50,9 +55,7 @@
   (= (get-current) @target))
 
 (defn check-win []
-  (if
-    (win-condition?)
-    (win)))
+  (when (win-condition?) (win)))
 
 (defn win []
   (html/remove-class! "current" "neutral")
@@ -78,9 +81,22 @@
     {:type (.-type query)
      :level (js/parseInt (.-level query) 10)}))
 
+(defn init-current-target []
+  (if (= (:type @current-level) "stack")
+    (let [current-list (html/create-element "ul" "current")
+          target-list (html/create-element "ul" "target")]
+      (.appendChild (.getElementById js/document "current-container") current-list)
+      (.appendChild (.getElementById js/document "target-container") target-list))
+    (let [current-span (html/create-element "span" "current")
+          target-span (html/create-element "span" "target")]
+      (.appendChild (.getElementById js/document "current-container") current-span)
+      (.appendChild (.getElementById js/document "target-container") target-span))))
+
 ; =============================================================================
 
 (reset! current-level (query))
+
+(init-current-target)
 
 (html/update-list!
   "list"
