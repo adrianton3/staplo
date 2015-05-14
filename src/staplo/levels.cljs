@@ -60,5 +60,15 @@
       :name "medium"
       :start-length (interval 4 4)
       :operations {:type "stack" :list ["+" "-" "*" "/"]}
-      :steps (interval 3 3)}]
+      :steps (interval 3 3)}
+    {
+      :name "hard"
+      :start-length (interval 4 4)
+      :operations {:type "stack" :list ["+" "-" "*" "/"]}
+      :steps (interval 3 3)}
+    {
+      :name "harder"
+      :start-length (interval 5 5)
+      :operations {:type "stack" :list ["+" "-" "*" "/"]}
+      :steps (interval 4 4)}]
   })
