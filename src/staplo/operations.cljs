@@ -25,6 +25,8 @@
       (operation stack)
       stack)))
 
+(def sqrt (.-sqrt js/Math))
+
 (def operations {
   "strings" {
               "reverse" (operation-pair
@@ -117,10 +119,15 @@
                        (first (next %)))
                      100))
             "/" (operation-pair
-                  (safe-apply #(conj
-                                 (next (next %))
-                                 (quot
-                                   (first %)
-                                   (first (next %)))))
+                  (safe-apply
+                    #(let [num (first %)
+                           div (first (next %))]
+                       (if (and
+                             (not= div 0)
+                             (integer? (/ num div)))
+                         (conj
+                           (next (next %))
+                           (/ num div))
+                         %)))
                   #(not= (first (next %)) 0))
             }})
