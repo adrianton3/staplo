@@ -1,7 +1,5 @@
-(ns staplo.levels)
-
-(defn interval [start end]
-  {:start start :end end})
+(ns staplo.levels
+  (:require [staplo.common :refer [interval]]))
 
 (def level-configs {
   "strings" [
@@ -51,4 +49,16 @@
       :name "harder"
       :start-length (interval 10 20)
       :operations {:type "numbers" :list ["reverse" "rotate" "+7" "+9" "*5" "*11"]}
-      :steps (interval 5 6)}]})
+      :steps (interval 5 6)}]
+  "stack" [
+    {
+      :name "easy"
+      :start-length (interval 3 3)
+      :operations {:type "stack" :list ["+" "-" "*"]}
+      :steps (interval 2 2)}
+    {
+      :name "medium"
+      :start-length (interval 4 4)
+      :operations {:type "stack" :list ["+" "-" "*" "/"]}
+      :steps (interval 3 3)}]
+  })

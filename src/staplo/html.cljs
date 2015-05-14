@@ -15,17 +15,31 @@
   (let [element (.getElementById js/document id)]
     (.addEventListener element "click" handler)))
 
-(defn create-list-item [text handler]
+(defn create-list-item [text]
   (let [item (.createElement js/document "li")]
     (set! (.-textContent item) text)
-    (.addEventListener item "click" (partial handler text))
     item))
 
-(defn update-list! [id elements handler]
-  (let [list (.getElementById js/document id)]
-    ; clear the list
-    (set! (.-innerHTML list) "")
-    ; add new elements to it
-    (doseq [element elements]
-      (let [item (create-list-item element handler)]
-        (.appendChild list item)))))
+(defn update-list!
+  ([id elements]
+    (let [list (.getElementById js/document id)]
+      ; clear the list
+      (set! (.-innerHTML list) "")
+      ; add new elements to it
+      (doseq [element elements]
+        (let [item (create-list-item element)]
+          (.appendChild list item)))))
+  ([id elements handler]
+    (let [list (.getElementById js/document id)]
+      ; clear the list
+      (set! (.-innerHTML list) "")
+      ; add new elements to it
+      (doseq [element elements]
+        (let [item (create-list-item element)]
+          (.addEventListener item "click" (partial handler element))
+          (.appendChild list item))))))
+
+(defn create-element [tag id]
+  (let [element (.createElement js/document tag)]
+    (set! (.-id element) id)
+    element))

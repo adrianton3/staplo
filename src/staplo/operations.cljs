@@ -19,6 +19,12 @@
 (defn contains-str [string substring]
   (> (.indexOf string substring) -1))
 
+(defn safe-apply [operation]
+  (fn [stack]
+    (if (>= (count stack) 2)
+      (operation stack)
+      stack)))
+
 (def operations {
   "strings" {
               "reverse" (operation-pair
@@ -83,4 +89,38 @@
               "rotate" (operation-pair
                          (wrap-endec rotate)
                          #(let [string (.toString %)] (not (same-char? string))))
-              }})
+              }
+  "stack" {
+            "+" (operation-pair
+                  (safe-apply #(conj
+                                 (next (next %))
+                                 (+
+                                   (first %)
+                                   (first (next %)))))
+                  (constantly true))
+            "-" (operation-pair
+                  (safe-apply #(conj
+                                 (next (next %))
+                                 (-
+                                   (first %)
+                                   (first (next %)))))
+                  (constantly true))
+            "*" (operation-pair
+                  (safe-apply #(conj
+                                 (next (next %))
+                                 (*
+                                   (first %)
+                                   (first (next %)))))
+                  #(<=
+                     (*
+                       (first %)
+                       (first (next %)))
+                     100))
+            "/" (operation-pair
+                  (safe-apply #(conj
+                                 (next (next %))
+                                 (quot
+                                   (first %)
+                                   (first (next %)))))
+                  #(not= (first (next %)) 0))
+            }})
