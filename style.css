@@ -41,13 +41,12 @@ ul {
     width: 224px;
 }
 
-li {
+#list li {
     border: 1px solid #2A2A2A;
     font-size: 32px;
     display: block;
-    margin: 6px 0;
+    margin: 6px auto;
     padding: 2px 16px 6px 16px;
-    transition: 120ms;
 
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -57,10 +56,22 @@ li {
     user-select: none;
 }
 
-li:hover {
+#list li {
+    transition: 120ms;
+}
+
+#list li:hover {
     background-color: #ff1c4d;
     color: #FFF;
     transition: 120ms;
+}
+
+.centered-container li {
+    border: 1px solid #AAA;
+    display: block;
+    width: 112px;
+    margin: 6px auto;
+    padding: 2px 16px 0 16px;
 }
 
 .neutral {
