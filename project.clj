@@ -12,7 +12,7 @@
 
   :source-paths ["src" "target/classes"]
 
-  :clean-targets ["out" "out-adv"]
+  :clean-targets ["out" "out-test"]
 
   :cljsbuild {
     :builds [{:id "dev"
@@ -24,11 +24,10 @@
                 :optimizations :none
                 :cache-analysis true
                 :source-map true}}
-             {:id "release"
-              :source-paths ["src"]
+             {:id "test"
+              :source-paths ["src" "test/spec"]
               :compiler {
-                :main staplo.core
-                :output-to "out-adv/staplo.min.js"
-                :output-dir "out-adv"
-                :optimizations :advanced
+                :output-to "out-test/staplo-test.js"
+                :output-dir "out-test"
+                :optimizations :none
                 :pretty-print false}}]})
