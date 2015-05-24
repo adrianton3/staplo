@@ -1,7 +1,7 @@
 (ns staplo-test.operations
   (:require
     [staplo.operations :as operations])
-  (:require-macros [staplo-test.jasmine :as jas]))
+  (:require-macros [staplo-test.jasmine :refer [describe it expect]]))
 
 (enable-console-print!)
 
@@ -9,20 +9,20 @@
 (def number-ops (get operations/operations "numbers"))
 (def stack-ops (get operations/operations "stack"))
 
-(jas/describe "strings"
-  (jas/describe "rotate"
+(describe "strings"
+  (describe "rotate"
     (let [rotate (:operation (get string-ops "rotate"))]
 
-      (jas/it "rotates a string"
-        (.toEqual (jas/expect (rotate "asd")) "das"))
+      (it "rotates a string"
+        (.toEqual (expect (rotate "asd")) "das"))
 
-      (jas/it "does nothing to an empty string"
-        (.toEqual (jas/expect (rotate "")) ""))))
+      (it "does nothing to an empty string"
+        (.toEqual (expect (rotate "")) ""))))
 
-    (jas/describe "reverse"
+    (describe "reverse"
       (let [reverse (:operation (get string-ops "reverse"))]
-        (jas/it "reverses a string"
-          (.toEqual (jas/expect (reverse "asd")) "dsa"))
+        (it "reverses a string"
+          (.toEqual (expect (reverse "asd")) "dsa"))
 
-        (jas/it "does nothing to an empty string"
-          (.toEqual (jas/expect (reverse "")) "")))))
+        (it "does nothing to an empty string"
+          (.toEqual (expect (reverse "")) "")))))
