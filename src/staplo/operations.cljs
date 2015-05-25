@@ -48,9 +48,9 @@
                         #(subs % 0 (dec (count %))))
                       #(> (count %) 1))
               "unwrap" (operation-pair
-                         #(if-cond
-                            (= (first %) (last %))
-                            (subs % 1 (dec (count %))))
+                         (if-cond
+                            #(= (first %) (last %))
+                            #(subs % 1 (dec (count %))))
                          #(and (= (first %) (last %)) (> (count %) 2)))
               "duplicate" (operation-pair
                             #(str % %)
