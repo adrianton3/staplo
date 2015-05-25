@@ -45,9 +45,9 @@ staplo.core.clicked_on = (function clicked_on(op_name){
 if(cljs.core.truth_(staplo.core.win_condition_QMARK_.call(null))){
 return null;
 } else {
-var map__35617 = staplo.operations.operations.call(null,new cljs.core.Keyword(null,"type","type",1174270348).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null,staplo.core.current_level))).call(null,op_name);
-var map__35617__$1 = ((cljs.core.seq_QMARK_.call(null,map__35617))?cljs.core.apply.call(null,cljs.core.hash_map,map__35617):map__35617);
-var op = cljs.core.get.call(null,map__35617__$1,new cljs.core.Keyword(null,"operation","operation",-1267664310));
+var map__5366 = staplo.operations.operations.call(null,new cljs.core.Keyword(null,"type","type",1174270348).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null,staplo.core.current_level))).call(null,op_name);
+var map__5366__$1 = ((cljs.core.seq_QMARK_.call(null,map__5366))?cljs.core.apply.call(null,cljs.core.hash_map,map__5366):map__5366);
+var op = cljs.core.get.call(null,map__5366__$1,new cljs.core.Keyword(null,"operation","operation",-1267664310));
 var new_string = op.call(null,staplo.core.get_current.call(null));
 staplo.core.push_state_BANG_.call(null,new_string);
 
@@ -79,10 +79,10 @@ return staplo.core.next_level.call(null);
 });
 staplo.html.on_click.call(null,"undo",staplo.core.pop_state_BANG_);
 staplo.core.next_level = (function next_level(){
-var map__35619 = cljs.core.deref.call(null,staplo.core.current_level);
-var map__35619__$1 = ((cljs.core.seq_QMARK_.call(null,map__35619))?cljs.core.apply.call(null,cljs.core.hash_map,map__35619):map__35619);
-var level = cljs.core.get.call(null,map__35619__$1,new cljs.core.Keyword(null,"level","level",1290497552));
-var type = cljs.core.get.call(null,map__35619__$1,new cljs.core.Keyword(null,"type","type",1174270348));
+var map__5368 = cljs.core.deref.call(null,staplo.core.current_level);
+var map__5368__$1 = ((cljs.core.seq_QMARK_.call(null,map__5368))?cljs.core.apply.call(null,cljs.core.hash_map,map__5368):map__5368);
+var level = cljs.core.get.call(null,map__5368__$1,new cljs.core.Keyword(null,"level","level",1290497552));
+var type = cljs.core.get.call(null,map__5368__$1,new cljs.core.Keyword(null,"type","type",1174270348));
 var config = cljs.core.nth.call(null,cljs.core.get.call(null,staplo.levels.level_configs,type),level);
 var challenge = staplo.generator.generate_challenge.call(null,config);
 staplo.core.set_start_BANG_.call(null,new cljs.core.Keyword(null,"start","start",-355208981).cljs$core$IFn$_invoke$arity$1(challenge));
@@ -110,10 +110,10 @@ return document.getElementById("target-container").appendChild(target_span);
 });
 cljs.core.reset_BANG_.call(null,staplo.core.current_level,staplo.core.query.call(null));
 staplo.core.init_current_target.call(null);
-staplo.html.update_list_BANG_.call(null,"list",(function (){var map__35620 = cljs.core.deref.call(null,staplo.core.current_level);
-var map__35620__$1 = ((cljs.core.seq_QMARK_.call(null,map__35620))?cljs.core.apply.call(null,cljs.core.hash_map,map__35620):map__35620);
-var level = cljs.core.get.call(null,map__35620__$1,new cljs.core.Keyword(null,"level","level",1290497552));
-var type = cljs.core.get.call(null,map__35620__$1,new cljs.core.Keyword(null,"type","type",1174270348));
+staplo.html.update_list_BANG_.call(null,"list",(function (){var map__5369 = cljs.core.deref.call(null,staplo.core.current_level);
+var map__5369__$1 = ((cljs.core.seq_QMARK_.call(null,map__5369))?cljs.core.apply.call(null,cljs.core.hash_map,map__5369):map__5369);
+var level = cljs.core.get.call(null,map__5369__$1,new cljs.core.Keyword(null,"level","level",1290497552));
+var type = cljs.core.get.call(null,map__5369__$1,new cljs.core.Keyword(null,"type","type",1174270348));
 return new cljs.core.Keyword(null,"list","list",765357683).cljs$core$IFn$_invoke$arity$1(new cljs.core.Keyword(null,"operations","operations",1630691895).cljs$core$IFn$_invoke$arity$1(cljs.core.nth.call(null,cljs.core.get.call(null,staplo.levels.level_configs,type),level)));
 })(),staplo.core.clicked_on);
 staplo.core.next_level.call(null);

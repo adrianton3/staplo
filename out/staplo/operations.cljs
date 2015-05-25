@@ -19,13 +19,20 @@
 (defn contains-str [string substring]
   (> (.indexOf string substring) -1))
 
-(defn safe-apply [operation]
-  (fn [stack]
-    (if (>= (count stack) 2)
-      (operation stack)
-      stack)))
+(defn if-cond [predicate fun]
+  #(if (predicate %) (fun %) %))
 
-(def sqrt (.-sqrt js/Math))
+(defn at-least [min-size collection]
+  (>= (count collection) min-size))
+
+(def at-least-2 (partial at-least 2))
+
+(defn bin-op [op]
+  #(conj
+     (next (next %))
+     (op
+       (first %)
+       (first (next %)))))
 
 (def operations {
   "strings" {
@@ -36,10 +43,14 @@
                          rotate
                          #(not (same-char? %)))
               "pop" (operation-pair
-                      #(subs % 0 (dec (count %)))
+                      (if-cond
+                        #(> (count %) 1)
+                        #(subs % 0 (dec (count %))))
                       #(> (count %) 1))
               "unwrap" (operation-pair
-                         #(if (= (first %) (last %)) (subs % 1 (dec (count %))) %)
+                         (if-cond
+                            #(= (first %) (last %))
+                            #(subs % 1 (dec (count %))))
                          #(and (= (first %) (last %)) (> (count %) 2)))
               "duplicate" (operation-pair
                             #(str % %)
@@ -94,40 +105,37 @@
               }
   "stack" {
             "+" (operation-pair
-                  (safe-apply #(conj
-                                 (next (next %))
-                                 (+
-                                   (first %)
-                                   (first (next %)))))
+                  (if-cond
+                    at-least-2
+                    (bin-op +))
                   (constantly true))
             "-" (operation-pair
-                  (safe-apply #(conj
-                                 (next (next %))
-                                 (-
-                                   (first %)
-                                   (first (next %)))))
+                  (if-cond
+                    at-least-2
+                    (bin-op -))
                   (constantly true))
             "*" (operation-pair
-                  (safe-apply #(conj
-                                 (next (next %))
-                                 (*
-                                   (first %)
-                                   (first (next %)))))
+                  (if-cond
+                    at-least-2
+                    (bin-op *))
                   #(<=
                      (*
                        (first %)
                        (first (next %)))
                      100))
             "/" (operation-pair
-                  (safe-apply
-                    #(let [num (first %)
-                           div (first (next %))]
-                       (if (and
-                             (not= div 0)
-                             (integer? (/ num div)))
-                         (conj
-                           (next (next %))
-                           (/ num div))
-                         %)))
-                  #(not= (first (next %)) 0))
+                  (if-cond
+                    #(and
+                       (at-least-2 %)
+                       (let [num (first %)
+                             div (first (next %))]
+                         (and
+                           (not= div 0)
+                           (integer? (/ num div)))))
+                    (bin-op /))
+                  #(let [num (first %)
+                         div (first (next %))]
+                     (and
+                       (not= div 0)
+                       (integer? (/ num div)))))
             }})
