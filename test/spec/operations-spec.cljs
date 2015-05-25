@@ -50,4 +50,43 @@
         (.toEqual (expect (unwrap "aa")) ""))
 
       (it "does nothing to an empty string"
-        (.toEqual (expect (unwrap "")) "")))))
+        (.toEqual (expect (unwrap "")) ""))))
+
+  (describe "duplicate"
+    (let [duplicate (:operation (get string-ops "duplicate"))]
+      (it "duplicates a string"
+        (.toEqual (expect (duplicate "asd")) "asdasd"))
+
+      (it "does nothing to an empty string"
+        (.toEqual (expect (duplicate "")) ""))))
+
+  (describe "duplicate-last"
+    (let [duplicate-last (:operation (get string-ops "duplicate-last"))]
+      (it "duplicates the last character of a string"
+        (.toEqual (expect (duplicate-last "asd")) "asdd"))
+
+      (it "does nothing to an empty string"
+        (.toEqual (expect (duplicate-last "")) "")))))
+
+(describe "numbers"
+  (describe "rotate"
+    (let [rotate (:operation (get number-ops "rotate"))]
+      (it "rotates a number"
+        (.toEqual (expect (rotate 1234)) 4123))
+
+      (it "does nothing to a single digit number"
+        (.toEqual (expect (rotate 3)) 3))
+
+      (it "cancels leading zeros"
+        (.toEqual (expect (rotate 400)) 40))))
+
+  (describe "reverse"
+    (let [reverse (:operation (get number-ops "reverse"))]
+      (it "reverses a number"
+        (.toEqual (expect (reverse 1234)) 4321))
+
+      (it "does nothing to a single digit number"
+        (.toEqual (expect (reverse 3)) 3))
+
+      (it "cancels leading zeros"
+        (.toEqual (expect (reverse 400)) 4)))))
