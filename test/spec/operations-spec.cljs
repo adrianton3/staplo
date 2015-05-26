@@ -68,6 +68,7 @@
       (it "does nothing to an empty string"
         (.toEqual (expect (duplicate-last "")) "")))))
 
+
 (describe "numbers"
   (describe "rotate"
     (let [rotate (:operation (get number-ops "rotate"))]
@@ -90,3 +91,51 @@
 
       (it "cancels leading zeros"
         (.toEqual (expect (reverse 400)) 4)))))
+
+
+(describe "stack"
+  (describe "+"
+    (let [plus (:operation (get stack-ops "+"))]
+      (it "adds the two top numbers"
+        (.toEqual (expect (plus '(3 8 1 2))) '(11 1 2)))
+
+      (it "does nothing to a one element stack"
+        (.toEqual (expect (plus '(3))) '(3)))
+
+      (it "does nothing to an empty stack"
+        (.toEqual (expect (plus '())) '()))))
+
+  (describe "/"
+    (describe "precondition"
+      (let [precondition (:precondition (get stack-ops "/"))]
+        (it "passes"
+          (.toEqual (expect (precondition '(8 4 1 2))) true))
+
+        (it "fails if the result would not be an integer"
+          (.toEqual (expect (precondition '(8 3 1 2))) false))
+
+        (it "fails if the divisor is 0"
+          (.toEqual (expect (precondition '(8 0 1 2))) false))
+
+        (it "fails for a one element stack"
+          (.toEqual (expect (precondition '(3))) false))
+
+        (it "fails for an empty stack"
+          (.toEqual (expect (precondition '())) false))))
+
+    (describe "operation"
+      (let [divide (:operation (get stack-ops "/"))]
+        (it "divides the two top numbers"
+          (.toEqual (expect (divide '(8 4 1 2))) '(2 1 2)))
+
+        (it "does not divide the two top numbers if the result would not be an integer"
+          (.toEqual (expect (divide '(8 3 1 2))) '(8 3 1 2)))
+
+        (it "does not divide the two top numbers if the divisor is 0"
+          (.toEqual (expect (divide '(8 0 1 2))) '(8 0 1 2)))
+
+        (it "does nothing to a one element stack"
+          (.toEqual (expect (divide '(3))) '(3)))
+
+        (it "does nothing to an empty stack"
+          (.toEqual (expect (divide '())) '()))))))

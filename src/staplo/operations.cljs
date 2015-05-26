@@ -38,7 +38,11 @@
   "strings" {
               "reverse" (operation-pair
                           str/reverse
-                          #(and (not= % (str/reverse %)) (or (empty? %2) (not= (first %2) "reverse"))))
+                          #(and
+                             (not= % (str/reverse %))
+                             (or
+                               (empty? %2)
+                               (not= (first %2) "reverse"))))
               "rotate" (operation-pair
                          rotate
                          #(not (same-char? %)))
@@ -123,19 +127,17 @@
                        (first %)
                        (first (next %)))
                      100))
-            "/" (operation-pair
-                  (if-cond
-                    #(and
-                       (at-least-2 %)
-                       (let [num (first %)
+            "/" (let [safe-div
+                      #(let [num (first %)
                              div (first (next %))]
                          (and
                            (not= div 0)
-                           (integer? (/ num div)))))
-                    (bin-op /))
-                  #(let [num (first %)
-                         div (first (next %))]
-                     (and
-                       (not= div 0)
-                       (integer? (/ num div)))))
+                           (integer? (/ num div))))]
+                  (operation-pair
+                    (if-cond
+                      #(and
+                         (at-least-2 %)
+                         (safe-div %))
+                      (bin-op /))
+                    safe-div))
             }})
