@@ -41,28 +41,16 @@ return staplo.core.update_display_BANG_.call(null,"current",staplo.core.get_curr
 cljs.core.add_watch.call(null,staplo.core.target,new cljs.core.Keyword(null,"watcher","watcher",2145165251),(function (key,atom,old_state,new_state){
 return staplo.core.update_display_BANG_.call(null,"target",new_state);
 }));
-staplo.core.clicked_on = (function clicked_on(op_name){
-if(cljs.core.truth_(staplo.core.win_condition_QMARK_.call(null))){
-return null;
-} else {
-var map__5366 = staplo.operations.operations.call(null,new cljs.core.Keyword(null,"type","type",1174270348).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null,staplo.core.current_level))).call(null,op_name);
-var map__5366__$1 = ((cljs.core.seq_QMARK_.call(null,map__5366))?cljs.core.apply.call(null,cljs.core.hash_map,map__5366):map__5366);
-var op = cljs.core.get.call(null,map__5366__$1,new cljs.core.Keyword(null,"operation","operation",-1267664310));
-var new_string = op.call(null,staplo.core.get_current.call(null));
-staplo.core.push_state_BANG_.call(null,new_string);
+staplo.core.next_level = (function next_level(){
+var map__5520 = cljs.core.deref.call(null,staplo.core.current_level);
+var map__5520__$1 = ((cljs.core.seq_QMARK_.call(null,map__5520))?cljs.core.apply.call(null,cljs.core.hash_map,map__5520):map__5520);
+var level = cljs.core.get.call(null,map__5520__$1,new cljs.core.Keyword(null,"level","level",1290497552));
+var type = cljs.core.get.call(null,map__5520__$1,new cljs.core.Keyword(null,"type","type",1174270348));
+var config = cljs.core.nth.call(null,cljs.core.get.call(null,staplo.levels.level_configs,type),level);
+var challenge = staplo.generator.generate_challenge.call(null,config);
+staplo.core.set_start_BANG_.call(null,new cljs.core.Keyword(null,"start","start",-355208981).cljs$core$IFn$_invoke$arity$1(challenge));
 
-return staplo.core.check_win.call(null);
-}
-});
-staplo.core.win_condition_QMARK_ = (function win_condition_QMARK_(){
-return cljs.core._EQ_.call(null,staplo.core.get_current.call(null),cljs.core.deref.call(null,staplo.core.target));
-});
-staplo.core.check_win = (function check_win(){
-if(staplo.core.win_condition_QMARK_.call(null)){
-return staplo.core.win.call(null);
-} else {
-return null;
-}
+return cljs.core.reset_BANG_.call(null,staplo.core.target,new cljs.core.Keyword(null,"target","target",253001721).cljs$core$IFn$_invoke$arity$1(challenge));
 });
 staplo.core.win = (function win(){
 staplo.html.remove_class_BANG_.call(null,"current","neutral");
@@ -77,18 +65,30 @@ staplo.html.add_class_BANG_.call(null,"current","neutral");
 return staplo.core.next_level.call(null);
 }),(2500));
 });
-staplo.html.on_click.call(null,"undo",staplo.core.pop_state_BANG_);
-staplo.core.next_level = (function next_level(){
-var map__5368 = cljs.core.deref.call(null,staplo.core.current_level);
-var map__5368__$1 = ((cljs.core.seq_QMARK_.call(null,map__5368))?cljs.core.apply.call(null,cljs.core.hash_map,map__5368):map__5368);
-var level = cljs.core.get.call(null,map__5368__$1,new cljs.core.Keyword(null,"level","level",1290497552));
-var type = cljs.core.get.call(null,map__5368__$1,new cljs.core.Keyword(null,"type","type",1174270348));
-var config = cljs.core.nth.call(null,cljs.core.get.call(null,staplo.levels.level_configs,type),level);
-var challenge = staplo.generator.generate_challenge.call(null,config);
-staplo.core.set_start_BANG_.call(null,new cljs.core.Keyword(null,"start","start",-355208981).cljs$core$IFn$_invoke$arity$1(challenge));
-
-return cljs.core.reset_BANG_.call(null,staplo.core.target,new cljs.core.Keyword(null,"target","target",253001721).cljs$core$IFn$_invoke$arity$1(challenge));
+staplo.core.win_condition_QMARK_ = (function win_condition_QMARK_(){
+return cljs.core._EQ_.call(null,staplo.core.get_current.call(null),cljs.core.deref.call(null,staplo.core.target));
 });
+staplo.core.check_win = (function check_win(){
+if(staplo.core.win_condition_QMARK_.call(null)){
+return staplo.core.win.call(null);
+} else {
+return null;
+}
+});
+staplo.core.clicked_on = (function clicked_on(op_name){
+if(staplo.core.win_condition_QMARK_.call(null)){
+return null;
+} else {
+var map__5522 = staplo.operations.operations.call(null,new cljs.core.Keyword(null,"type","type",1174270348).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null,staplo.core.current_level))).call(null,op_name);
+var map__5522__$1 = ((cljs.core.seq_QMARK_.call(null,map__5522))?cljs.core.apply.call(null,cljs.core.hash_map,map__5522):map__5522);
+var op = cljs.core.get.call(null,map__5522__$1,new cljs.core.Keyword(null,"operation","operation",-1267664310));
+var new_string = op.call(null,staplo.core.get_current.call(null));
+staplo.core.push_state_BANG_.call(null,new_string);
+
+return staplo.core.check_win.call(null);
+}
+});
+staplo.html.on_click.call(null,"undo",staplo.core.pop_state_BANG_);
 staplo.core.query = (function query(){
 var query__$1 = purl().param();
 return new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"type","type",1174270348),query__$1.type,new cljs.core.Keyword(null,"level","level",1290497552),parseInt(query__$1.level,(10))], null);
@@ -110,10 +110,10 @@ return document.getElementById("target-container").appendChild(target_span);
 });
 cljs.core.reset_BANG_.call(null,staplo.core.current_level,staplo.core.query.call(null));
 staplo.core.init_current_target.call(null);
-staplo.html.update_list_BANG_.call(null,"list",(function (){var map__5369 = cljs.core.deref.call(null,staplo.core.current_level);
-var map__5369__$1 = ((cljs.core.seq_QMARK_.call(null,map__5369))?cljs.core.apply.call(null,cljs.core.hash_map,map__5369):map__5369);
-var level = cljs.core.get.call(null,map__5369__$1,new cljs.core.Keyword(null,"level","level",1290497552));
-var type = cljs.core.get.call(null,map__5369__$1,new cljs.core.Keyword(null,"type","type",1174270348));
+staplo.html.update_list_BANG_.call(null,"list",(function (){var map__5523 = cljs.core.deref.call(null,staplo.core.current_level);
+var map__5523__$1 = ((cljs.core.seq_QMARK_.call(null,map__5523))?cljs.core.apply.call(null,cljs.core.hash_map,map__5523):map__5523);
+var level = cljs.core.get.call(null,map__5523__$1,new cljs.core.Keyword(null,"level","level",1290497552));
+var type = cljs.core.get.call(null,map__5523__$1,new cljs.core.Keyword(null,"type","type",1174270348));
 return new cljs.core.Keyword(null,"list","list",765357683).cljs$core$IFn$_invoke$arity$1(new cljs.core.Keyword(null,"operations","operations",1630691895).cljs$core$IFn$_invoke$arity$1(cljs.core.nth.call(null,cljs.core.get.call(null,staplo.levels.level_configs,type),level)));
 })(),staplo.core.clicked_on);
 staplo.core.next_level.call(null);
