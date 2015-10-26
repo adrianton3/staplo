@@ -44,18 +44,12 @@
   (fn [key atom old-state new-state]
     (update-display! "target" new-state)))
 
-(defn clicked-on [op-name]
-  (when-not (win-condition?)
-    (let [{op :operation} ((operations/operations (:type @current-level)) op-name)
-           new-string (op  (get-current))]
-      (push-state! new-string)
-      (check-win))))
-
-(defn win-condition? []
-  (= (get-current) @target))
-
-(defn check-win []
-  (when (win-condition?) (win)))
+(defn next-level []
+  (let [{:keys [type level]} @current-level
+        config (nth (get levels/level-configs type) level)
+        challenge (generator/generate-challenge config)]
+    (set-start! (:start challenge))
+    (reset! target (:target challenge))))
 
 (defn win []
   (html/remove-class! "current" "neutral")
@@ -67,14 +61,20 @@
       (next-level))
     2500))
 
-(html/on-click "undo" pop-state!)
+(defn win-condition? []
+  (= (get-current) @target))
 
-(defn next-level []
-  (let [{:keys [type level]} @current-level
-         config (nth (get levels/level-configs type) level)
-         challenge (generator/generate-challenge config)]
-    (set-start! (:start challenge))
-    (reset! target (:target challenge))))
+(defn check-win []
+  (when (win-condition?) (win)))
+
+(defn clicked-on [op-name]
+  (when-not (win-condition?)
+    (let [{op :operation} ((operations/operations (:type @current-level)) op-name)
+           new-string (op  (get-current))]
+      (push-state! new-string)
+      (check-win))))
+
+(html/on-click "undo" pop-state!)
 
 (defn query []
   (let [query (.param (js/purl))]

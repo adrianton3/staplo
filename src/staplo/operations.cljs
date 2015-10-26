@@ -72,13 +72,13 @@
                          #(str % "c")
                          #(< (count %) 6))
               "ab -> c" (operation-pair
-                          #(replace % #"ab" "c")
+                          #(str/replace % #"ab" "c")
                           #(contains-str % "ab"))
               "bc -> a" (operation-pair
-                          #(replace % #"bc" "a")
+                          #(str/replace % #"bc" "a")
                           #(contains-str % "bc"))
               "ca -> b" (operation-pair
-                          #(replace % #"ca" "b")
+                          #(str/replace % #"ca" "b")
                           #(contains-str % "ca"))
               }
   "numbers" {
