@@ -41,9 +41,8 @@ ul {
     width: 224px;
 }
 
-#list li {
+li {
     border: 1px solid #2A2A2A;
-    font-size: 32px;
     display: block;
     margin: 6px auto;
     padding: 2px 16px 6px 16px;
@@ -56,11 +55,12 @@ ul {
     user-select: none;
 }
 
-#list li {
+.operation {
     transition: 120ms;
+    font-size: 32px;
 }
 
-#list li:hover {
+.operation:hover {
     background-color: #ff1c4d;
     color: #FFF;
     transition: 120ms;
@@ -83,11 +83,11 @@ ul {
     transition: 500ms;
 }
 
-#current, #target {
+.current, .target {
     font-family: 'Bitter', serif;
 }
 
-#game {
+.game {
     width: 224px;
     margin: 32px auto 0 auto;
 }
