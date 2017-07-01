@@ -2,12 +2,13 @@
   :description "FIXME: write this!"
   :url "http://example.com/FIXME"
 
-  :dependencies [[org.clojure/clojure "1.6.0"]
-                 [org.clojure/clojurescript "0.0-2755"]]
+  :dependencies [[org.clojure/clojure "1.8.0"]
+                 [org.clojure/clojurescript "1.9.562"]
+                 [reagent "0.7.0"]]
 
   :node-dependencies [[source-map-support "0.2.8"]]
 
-  :plugins [[lein-cljsbuild "1.0.4"]
+  :plugins [[lein-cljsbuild "1.1.6"]
             [lein-npm "0.4.0"]]
 
   :source-paths ["src" "target/classes"]
