@@ -2,6 +2,7 @@
   (:require
     [clojure.string :as str]
     [staplo.operations :as operations]
+    [staplo.solver :as solver]
     [staplo.common :refer [rand2 rand-interval accumulate]]))
 
 (defn same-char? [string]
@@ -72,9 +73,27 @@
       {:text start-text :op-history '() :text-history #{start-text}}
       steps)))
 
-(defn generate-challenge [config]
+(defn generate-candidate [config]
   (let [start (generate-start (:type (:operations config)) (:start-length config))
         steps (rand-interval (:steps config))
         target ((generate-ops start steps (:operations config)) :text)]
     {:start start
-     :target target}))
+     :target target
+     :steps steps}))
+
+(defn generate-challenge [config]
+  (let [operations-map (operations/operations (->> config :operations :type))
+        operations (vals operations-map)
+        candidates (repeatedly 5 #(generate-candidate config))
+        solved (map
+                 #(merge
+                    %
+                    (solver/get-min-and-count
+                      (:start %)
+                      (:target %)
+                      operations
+                      (:steps %)))
+                 candidates)]
+    (apply max-key
+      #(- (* (:min %) 500) (:count %))
+      solved)))
