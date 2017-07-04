@@ -1,4 +1,4 @@
-(ns staplo-test.jasmine)
+(ns utils.jasmine)
 
 (defmacro describe [text & body]
   `(js/describe ~text

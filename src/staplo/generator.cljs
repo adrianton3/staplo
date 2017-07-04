@@ -39,18 +39,17 @@
 (defn generate-start [type length]
   ((generators type) length))
 
-; way too many parameters
 (defn generate-op [operations operation-names text op-history text-history]
-  (let [rand-op
-        #(let [op-name (rand-nth operation-names)]
-            {:op-name op-name
-             :op (operations op-name)})]
+  (letfn [(rand-op []
+            (let [op-name (rand-nth operation-names)]
+              {:op-name op-name
+               :op (operations op-name)}))]
     (loop [candidate-op (rand-op)]
-      (let [{{precondition :precondition operation :operation} :op} candidate-op
-            result (operation text)]
+      (let [{op :op} candidate-op]
         (if (and
-              (precondition text op-history)
-              (not (contains? text-history result)))
+              ((:precondition op) text op-history)
+              ((:generator-precondition op) text op-history)
+              (not (contains? text-history ((:operation op) text))))
           candidate-op
           (recur (rand-op)))))))
 

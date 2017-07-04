@@ -3,7 +3,7 @@
     [clojure.string :as str]))
 
 (defn wrap-endec [fun]
-  #(js/parseInt (fun (.toString %)) 10))
+  #(-> % str fun int))
 
 (defn rotate [string]
   (str
@@ -13,14 +13,18 @@
 (defn same-char? [string]
   (apply = (str/split string "")))
 
-(defn operation-pair [op precondition]
-  {:operation op :precondition precondition})
+(defn make-operation
+  ([op precondition]
+   {:operation op
+    :precondition precondition
+    :generator-precondition precondition})
+  ([op precondition generator-precondition]
+   {:operation op
+    :precondition precondition
+    :generator-precondition generator-precondition}))
 
 (defn contains-str [string substring]
   (> (.indexOf string substring) -1))
-
-(defn if-cond [predicate fun]
-  #(if (predicate %) (fun %) %))
 
 (defn at-least [min-size collection]
   (>= (count collection) min-size))
@@ -36,108 +40,107 @@
 
 (def operations {
   "strings" {
-              "reverse" (operation-pair
+              "reverse" (make-operation
                           str/reverse
-                          #(and
-                             (not= % (str/reverse %))
-                             (or
-                               (empty? %2)
-                               (not= (first %2) "reverse"))))
-              "rotate" (operation-pair
+                          #(not= % (str/reverse %))
+                          #(or
+                             (empty? %2)
+                             (not= (first %2) "reverse")))
+              "rotate" (make-operation
                          rotate
                          #(not (same-char? %)))
-              "pop" (operation-pair
-                      (if-cond
-                        #(> (count %) 1)
-                        #(subs % 0 (dec (count %))))
+              "pop" (make-operation
+                      #(subs % 0 (dec (count %)))
                       #(> (count %) 1))
-              "unwrap" (operation-pair
-                         (if-cond
-                            #(= (first %) (last %))
-                            #(subs % 1 (dec (count %))))
-                         #(and (= (first %) (last %)) (> (count %) 2)))
-              "duplicate" (operation-pair
+              "unwrap" (make-operation
+                         #(subs % 1 (dec (count %)))
+                         #(and
+                            (= (first %) (last %))
+                            (> (count %) 2)))
+              "duplicate" (make-operation
                             #(str % %)
+                            (constantly true)
                             #(< (count %) 4))
-              "duplicate-last" (operation-pair
+              "duplicate-last" (make-operation
                                  #(str % (last %))
+                                 (constantly true)
                                  #(< (count %) 6))
-              "push-a" (operation-pair
+              "push-a" (make-operation
                          #(str % "a")
+                         (constantly true)
                          #(< (count %) 6))
-              "push-b" (operation-pair
+              "push-b" (make-operation
                          #(str % "b")
+                         (constantly true)
                          #(< (count %) 6))
-              "push-c" (operation-pair
+              "push-c" (make-operation
                          #(str % "c")
+                         (constantly true)
                          #(< (count %) 6))
-              "ab -> c" (operation-pair
+              "ab -> c" (make-operation
                           #(str/replace % #"ab" "c")
                           #(contains-str % "ab"))
-              "bc -> a" (operation-pair
+              "bc -> a" (make-operation
                           #(str/replace % #"bc" "a")
                           #(contains-str % "bc"))
-              "ca -> b" (operation-pair
+              "ca -> b" (make-operation
                           #(str/replace % #"ca" "b")
                           #(contains-str % "ca"))
               }
   "numbers" {
-              "+7" (operation-pair
+              "+7" (make-operation
                      #(+ 7 %)
                      (constantly true))
-              "+9" (operation-pair
+              "+9" (make-operation
                      #(+ 9 %)
                      (constantly true))
-              "*2" (operation-pair
+              "*2" (make-operation
                      #(* 2 %)
+                     (constantly true)
                      #(not= 0 %))
-              "*5" (operation-pair
+              "*5" (make-operation
                      #(* 5 %)
+                     (constantly true)
                      #(not= 0 %))
-              "*11" (operation-pair
+              "*11" (make-operation
                       #(* 11 %)
+                      (constantly true)
                       #(not= 0 %))
-              "sqr" (operation-pair
+              "sqr" (make-operation
                       #(* % %)
+                      (constantly true)
                       #(<= % 20))
-              "reverse" (operation-pair
+              "reverse" (make-operation
                           (wrap-endec str/reverse)
-                          #(let [string (.toString %)] (not= (str (str/reverse string)))))
-              "rotate" (operation-pair
+                          #(not= % ((wrap-endec str/reverse) %)))
+              "rotate" (make-operation
                          (wrap-endec rotate)
-                         #(let [string (.toString %)] (not (same-char? string))))
+                         #(not (same-char? (str %))))
               }
   "stack" {
-            "+" (operation-pair
-                  (if-cond
-                    at-least-2
-                    (bin-op +))
-                  (constantly true))
-            "-" (operation-pair
-                  (if-cond
-                    at-least-2
-                    (bin-op -))
-                  (constantly true))
-            "*" (operation-pair
-                  (if-cond
-                    at-least-2
-                    (bin-op *))
+            "+" (make-operation
+                  (bin-op +)
+                  at-least-2)
+            "-" (make-operation
+                  (bin-op -)
+                  at-least-2)
+            "*" (make-operation
+                  (bin-op *)
+                  at-least-2
                   #(<=
                      (*
                        (first %)
                        (first (next %)))
                      100))
-            "/" (let [safe-div
+            "/" (let [safe-div?
                       #(let [num (first %)
                              div (first (next %))]
                          (and
                            (not= div 0)
                            (integer? (/ num div))))]
-                  (operation-pair
-                    (if-cond
-                      #(and
-                         (at-least-2 %)
-                         (safe-div %))
-                      (bin-op /))
-                    safe-div))
+                  (make-operation
+                    (bin-op /)
+                    #(and
+                       (at-least-2 %)
+                       (safe-div? %))))
             }})

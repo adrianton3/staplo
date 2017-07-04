@@ -26,7 +26,7 @@
                 :cache-analysis true
                 :source-map true}}
              {:id "test"
-              :source-paths ["src" "test/spec"]
+              :source-paths ["src" "test"]
               :compiler {
                 :output-to "out-test/staplo-test.js"
                 :output-dir "out-test"

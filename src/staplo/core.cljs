@@ -64,9 +64,11 @@
 
 
 (defn handle-click [op-name]
-  (let [{op :operation} ((operations/operations (:type @current-level)) op-name)]
-    (apply-op op)
-    (when (win-condition?) (win))))
+  (let [{op :operation precondition :precondition}
+        ((operations/operations (:type @current-level)) op-name)]
+    (when (precondition (first @game-state))
+      (apply-op op)
+      (when (win-condition?) (win)))))
 
 
 (defn render-operations [operations]
