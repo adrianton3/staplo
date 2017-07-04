@@ -117,3 +117,9 @@ button.neutral {
 div.centered-container:nth-of-type(2) {
     margin-bottom: 112px;
 }
+
+.initial-message {
+    margin-top: 200px;
+    text-align: center;
+    font-size: 24px;
+}
