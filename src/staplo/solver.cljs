@@ -4,7 +4,7 @@
   (letfn [(recurse [state length]
             (cond
               (= state target) {:min length :count 1}
-              (> length length-max) nil
+              (>= length length-max) nil
               :else (reduce
                       #(if ((:precondition %2) state)
                          (let [new-state ((:operation %2) state)
