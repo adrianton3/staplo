@@ -15,6 +15,8 @@
 
 (def target (r/atom nil))
 
+(def steps-min (r/atom 0))
+
 (def current-level (r/atom {:type "" :level ""}))
 
 
@@ -45,6 +47,7 @@
         challenge (generator/generate-challenge config)]
     (set-start! (:start challenge))
     (reset! target (:target challenge))
+    (reset! steps-min (:min challenge))
     (reset! app-state :play)))
 
 
@@ -83,6 +86,12 @@
         operation]))])
 
 
+(defn render-stats [steps steps-min]
+  [:div.score
+   [:span.step "Steps: " steps]
+   [:span.step "Shortest: " steps-min]])
+
+
 (defn render-state [state]
   (if (= (:type @current-level) "stack")
     [:ul
@@ -110,6 +119,7 @@
         operations (get-in levels/level-configs [type level :operations :list])]
     [:div.game
      [render-operations operations]
+     [render-stats (dec (count @game-state)) @steps-min]
      [render-current (get-current)]
      [render-target @target]
 
