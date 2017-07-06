@@ -122,9 +122,15 @@ button {
     font-weight: 600;
 }
 
-button.neutral {
+.undo {
     color: white;
-    background-color: #0099d7;
+    background-color: hsl(197, 100%, 42%);
+    transition: 120ms;
+}
+
+.undo:hover {
+    background-color: hsl(197, 100%, 32%);
+    transition: 120ms;
 }
 
 .target {

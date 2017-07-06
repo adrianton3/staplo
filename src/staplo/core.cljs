@@ -123,7 +123,7 @@
      [render-current (get-current)]
      [render-target @target]
 
-     [:button.neutral
+     [:button.undo
       {:on-click (when (= @app-state :play) pop-state!)}
       "Undo"]
 
