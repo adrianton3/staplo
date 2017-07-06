@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
 mkdir tmp
-cp out tmp -r
+cp out/staplo.js tmp
 git checkout gh-pages
-cp tmp/out ./ -r
+cp tmp/staplo.js out
 
 git checkout master -- index.html
 git checkout master -- game.html
