@@ -37,7 +37,7 @@ a {
 ul {
     list-style-type: none;
     padding: 0;
-    margin: 8px auto 32px auto;
+    margin: 8px auto 8px auto;
     width: 224px;
 }
 
@@ -53,6 +53,19 @@ li {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+}
+
+.score{
+    margin-bottom: 24px;
+}
+
+.step {
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.step:last-child {
+    float: right;
 }
 
 .operation {
@@ -109,11 +122,23 @@ button {
     font-weight: 600;
 }
 
-button.neutral {
+.undo {
     color: white;
-    background-color: #0099d7;
+    background-color: hsl(197, 100%, 42%);
+    transition: 120ms;
 }
 
-div.centered-container:nth-of-type(2) {
-    margin-bottom: 112px;
+.undo:hover {
+    background-color: hsl(197, 100%, 32%);
+    transition: 120ms;
+}
+
+.target {
+    margin-bottom: 100px;
+}
+
+.initial-message {
+    margin-top: 200px;
+    text-align: center;
+    font-size: 24px;
 }
