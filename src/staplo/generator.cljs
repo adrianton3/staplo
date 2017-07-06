@@ -58,10 +58,10 @@
          state-history (list start-state)]
     (let [op (generate-op-try op-seq state op-history state-history)]
       (cond
-        (nil? op) nil
         (zero? remaining) {:state state
                            :op-history op-history
                            :state-history state-history}
+        (nil? op) nil
         :else (let [new-state ((:operation op) state)]
                 (recur
                   new-state
