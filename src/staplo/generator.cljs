@@ -39,45 +39,52 @@
 (defn generate-start [type length]
   ((generators type) length))
 
-(defn generate-op [operations operation-names text op-history text-history]
-  (letfn [(rand-op []
-            (let [op-name (rand-nth operation-names)]
-              {:op-name op-name
-               :op (operations op-name)}))]
-    (loop [candidate-op (rand-op)]
-      (let [{op :op} candidate-op]
-        (if (and
-              ((:precondition op) text op-history)
-              ((:generator-precondition op) text op-history)
-              (not (contains? text-history ((:operation op) text))))
-          candidate-op
-          (recur (rand-op)))))))
+(defn generate-op-try [op-seq state op-history state-history]
+  (loop [op (rand-nth op-seq)
+         tries-remaining 20]
+    (cond
+      (zero? tries-remaining) nil
+      (and
+        ((:precondition op) state op-history)
+        ((:generator-precondition op) state op-history)
+        (not (contains? state-history ((:operation op) state))))
+      op
+      :else (recur (rand-nth op-seq) (dec tries-remaining)))))
 
-(defn generate-ops [start-text steps operations-config]
-  (letfn [
-    (step [{text :text op-history :op-history text-history :text-history}]
-      (let [op-sort (:type operations-config)
-            {op-name :op-name op :op} (generate-op
-                                        (operations/operations op-sort)
-                                        (:list operations-config)
-                                        text
-                                        op-history
-                                        text-history)
-            result ((:operation op) text)]
-        {:text result
-         :op-history (conj op-history op-name)
-         :text-history (conj text-history result)}))]
-    (accumulate
-      step
-      {:text start-text :op-history '() :text-history #{start-text}}
-      steps)))
+(defn generate-ops-try [start-state step-count op-seq]
+  (loop [state start-state
+         remaining step-count
+         op-history '()
+         state-history (list start-state)]
+    (let [op (generate-op-try op-seq state op-history state-history)]
+      (cond
+        (nil? op) nil
+        (zero? remaining) {:state state
+                           :op-history op-history
+                           :state-history state-history}
+        :else (let [new-state ((:operation op) state)]
+                (recur
+                  new-state
+                  (dec remaining)
+                  (conj op-history (:name op))
+                  (conj state-history new-state)))))))
 
-(defn generate-candidate [config]
-  (let [start (generate-start (:type (:operations config)) (:start-length config))
-        steps (rand-interval (:steps config))
-        target ((generate-ops start steps (:operations config)) :text)]
+(defn generate-ops [start-state step-count level-op-config op-config]
+  (let [op-map (op-config (:type level-op-config))
+        op-names (:list level-op-config)
+        op-seq (for [name op-names]
+                 (assoc (op-map name) :name name))]
+    (loop [ops nil]
+      (if (nil? ops)
+        (recur (generate-ops-try start-state step-count op-seq))
+        ops))))
+
+(defn generate-candidate [level-config]
+  (let [start (generate-start (:type (:operations level-config)) (:start-length level-config))
+        steps (rand-interval (:steps level-config))
+        generated (generate-ops start steps (:operations level-config) operations/operations)]
     {:start start
-     :target target
+     :target (:state generated)
      :steps steps}))
 
 (defn generate-challenge [config]
