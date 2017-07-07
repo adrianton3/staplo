@@ -71,9 +71,14 @@ li {
 .operation {
     transition: 120ms;
     font-size: 32px;
+    color: #AAA;
 }
 
-.operation:hover {
+.available {
+    color: #000;
+}
+
+.operation.available:hover {
     background-color: #ff1c4d;
     color: #FFF;
     transition: 120ms;
