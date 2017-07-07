@@ -69,21 +69,26 @@
 (defn handle-click [op-name]
   (let [{op :operation precondition :precondition}
         ((operations/operations (:type @current-level)) op-name)]
-    (when (precondition (first @game-state))
+    (when (precondition (first @game-state) '())
       (apply-op op)
       (when (win-condition?) (win)))))
 
 
-(defn render-operations [operations]
+(defn render-operations [op-names]
   [:ul
    (doall
-     (for [operation operations]
-       ^{:key operation}
-       [:li.operation
-        {:on-click (when
+     (for [op-name op-names]
+       ^{:key op-name}
+       [:li
+        {:class (str
+                  "operation "
+                  (let [op (get-in operations/operations [(:type @current-level) op-name])]
+                    (when ((:precondition op) (first @game-state) '())
+                      "available")))
+         :on-click (when
                      (= @app-state :play)
-                     (partial handle-click operation))}
-        operation]))])
+                     (partial handle-click op-name))}
+        op-name]))])
 
 
 (defn render-stats [steps steps-min]
@@ -116,9 +121,9 @@
 
 (defn render-game []
   (let [{:keys [type level]} @current-level
-        operations (get-in levels/level-configs [type level :operations :list])]
+        op-names (get-in levels/level-configs [type level :operations :list])]
     [:div.game
-     [render-operations operations]
+     [render-operations op-names]
      [render-stats (dec (count @game-state)) @steps-min]
      [render-current (get-current)]
      [render-target @target]
